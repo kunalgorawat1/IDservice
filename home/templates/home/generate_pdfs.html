@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block body %}
+
+      <div class="container">
+        <div class="col-md-3"  style="background-color:#2C5F2CAA; border-radius: 15px;">
+            <h1>Profile</h1>
+            {% if user.userprofile.image %}
+            <img src="{{ user.userprofile.image.url }}" width="140">
+            {% endif %}
+            {% if user.image %}
+            <img src="{{ user.image.url }}" width="140">
+            {% endif %}
+            <br>
+            <br>
+            <p>Register Number: {{user}}</p>
+            <p>First Name: {{user.first_name}}</p>
+            <p>Last Name: {{user.last_name}}</p>
+            <p>Email: {{user.email}}</p>
+        </div>
+        <br>
+        <div class="col-md-9" style="padding-left:20px">
+          {% if request.user.user_type == 1 %}
+          <table class='table'>
+              <thead>
+                <tr>
+                  <th>Name:</th>
+                  <th>Register Number: </th>
+                  <th>Type: </th>
+                  <th>Subject: </th>
+                  <th>Test: </th>
+                  <th>Purpose: </th>
+                  <th>proof: </th>
+                  <th>Report: </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for j in f %}
+                {% if request.user.first_name == j.name %}
+                  <tr>
+                    <form  method="post" target="_blank">
+                      {% csrf_token %}
+
+                            <td><input id="id_name" maxlength="100" name="name" style=" border-radius: 4px; border-style:initial"  value="{{ j.name}}" type="text" required readonly="readonly" /></td>
+                            <td><input id="id_register_number" maxlength="100" style=" border-radius: 4px; border-style:initial"  value="{{ j.register_number}}" name="register_number" type="text" required readonly="readonly" /></td>
+                            <td><input id="id_type" maxlength="100" value="{{ j.type }}" name="type" style=" border-radius: 4px; border-style:initial"  type="text" readonly="readonly" /></td>
+                            <td><input id="id_subject" maxlength="100" value="{{ j.subject }}" style=" border-radius: 4px; border-style:initial"  name="subject" type="text" readonly="readonly"></td>
+                            <td><input id="id_test" maxlength="100" name="test"  style=" border-radius: 4px; border-style:initial"  value="{{ j.test }}" type="text"  readonly="readonly"/></td>
+                            <td><input id="id_purpose" maxlength="200" style=" border-radius: 4px; border-style:initial"  value="{{ j.purpose }}" name="purpose" type="text" readonly="readonly"/></td>
+                            <td><a href="{{ j.proof }}" class="btn btn-success btn-lg" target='_blank'>proof</a></td>
+
+                            <td><button type="submit" id="button" class="btn btn-primary btn-lg" style="background-color:#2C5F2CAA; border-color:#2C5F2CAA;">generate PDF</button></td>
+
+                    </form>
+
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+
+
+                  {% for p in obj %}
+                  {% if request.user.first_name == p.name %}
+                    <tr>
+                      <td>X{{ p.name }}</td>
+                      <td>X{{ p.register_number }}</td>
+                      <td>X{{ p.type }}</td>
+                      <td>X{{ p.subject }}</td>
+                      <td>X{{ p.test }}</td>
+                      <td>X{{ p.pdf }}</td>
+                      <td>X<a href="{{ p.proof }}" class="btn btn-success btn-lg" target='_blank'>proof</a></td>
+                      <td>X<a href="{% url 'home:generate_pdfs_actual' %}" class="btn btn-warning btn-lg" target='_blank'> download</a> </td>
+
+                      <td>X<a href="{{ p.pdf }}" class="btn btn-warning btn-lg" target='_blank'> download1</a> </td>
+                    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {% endif %}
+                {% endfor %}
+
+              </tbody>
+          </table>
+          {% endif %}
+        </div>
+
+{% endblock %}

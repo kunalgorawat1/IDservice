@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+  <h2></h2><br>
+  <div class="col-md-3" style="background-color:#FFFFF10; border-style: solid;;border-radius: 15px;">
+      <h1>Profile</h1>
+      {% if user.userprofile.image %}
+      <img src="{{ user.userprofile.image.url }}" width="140">
+      {% endif %}
+      <br>
+      <p>Register Number: {{user}}</p>
+      <p>First Name: {{user.first_name}}</p>
+      <p>Last Name: {{user.last_name}}</p>
+      <p>Email: {{user.email}}</p>
+  </div>
+  <div class="col-md-9">
+      {% if user.user_type == 2 %}                    <!-- {% if user.first_name == retest.fa_name %}-->
+      <table class='table'>
+          <thead>
+            <tr>
+              <th>Type of Request: </th>
+              <th>Name: </th>
+              <th>Register Number: </th>
+              <th>proof: </th>
+              <th>Action: </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for retest in retests %}
+             <!--{% if user.first_name == retest.Fa_name %}-->
+              <tr>
+                <td><h4>Restest</h4></td>
+                <td>{{ retest.name }}</td>
+                <td>{{ retest.register_number }}</td>
+                <td>
+                  <a href="{{ retest.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Medical Proof for Retest</a>
+                </td>
+                <td>
+                  <form method='post' enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                  </form>
+                  <button type="button" id="retestbutton" class="btn btn-primary btn-lg" onclick="myFunction()">Accept & Forward</button>
+
+                </td>
+              </tr>
+
+             <!--{% endif %}-->
+            {% endfor %}
+            {% for internship in internships %}
+              <!--{% if user.first_name == internship.Fa_name %}-->
+              <tr>
+                <td><h4>Internship NOC</h4></td>
+                <td>{{ internship.name }}</td>
+                <td>{{ internship.register_number }}</td>
+                <td>
+                  <a href="{{ internship.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Proof for Internship NOC</a>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-lg">Accept & Forward</button>
+                </td>
+              </tr>
+              <!--{% endif %}-->
+            {% endfor %}
+            {% for bonafied in bonafieds %}
+              <!--{% if user.first_name == bonafied.Fa_name %}-->
+              <tr>
+                <td><h4>Bonafied</h4></td>
+                <td>{{ bonafied.name }}</td>
+                <td>{{ bonafied.register_number }}</td>
+                <td>
+                  <a href="{{ bonafied.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Proof for Bonafied</a>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-lg">Accept & Forward</button>
+                </td>
+              </tr>
+              <!--{% endif %}-->
+            {% endfor %}
+          </tbody>
+      </table>
+      {% elif user.user_type == 1 %}
+        <h2>request submitted</h2>
+      {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+<!--         <tr><th><label for="id_proof_a">Proof a:</label></th><td><input id="id_proof_a"  value= "{{ retest.proof.url }}" name="proof_a" type="text" required /></td></tr>
+          <tr><th><label for="id_name_a">Name a:</label></th><td><input id="id_name_a" maxlength="100" value="{{ retest.name }}" name="name_a" type="text" required /></td></tr>
+          <tr><th><label for="id_register_number_a">Register number a:</label></th><td><input id="id_register_number_a" maxlength="100" value="{{ retest.register_number }}" name="register_number_a" type="text" required /></td></tr>
+
+          <!--
+          <tr><th><label for="id_type_a">Type a:</label></th><td><select id="id_type_a" name="type_a" required>
+          <option value="" selected="selected">---------</option>
+          <option value="On Campus">On Campus</option>
+          <option value="Off Campus">Off Campus</option>
+          </select></td></tr>
+          -->
+
+<!--                    <tr><th><label for="id_subject_a">Subject a:</label></th><td><input id="id_subject_a" maxlength="100" value="{{ retest.subject }}" name="id_subject_a" type="text" required /></td></tr>
+          <!--
+          <tr><th><label for="id_subject_a">Subject a:</label></th><td><select id="id_subject_a" name="subject_a" required>
+          <option value="" selected="selected">---------</option>
+          <option value="OS">OS</option>
+          <option value="CD">CD</option>
+          <option value="DS">DS</option>
+          <option value="DSD">DSD</option>
+          </select></td></tr>
+          -->
+<!--                <tr><th><label for="id_test_a">Test a:</label></th><td><input id="id_test_a" maxlength="100" value="{{ retest.test }}" name="id_test_a" type="text" required /></td></tr>
+
+          <!--<tr><th><label for="id_test_a">Test a:</label></th><td><select id="id_test_a" name="test_a" required>
+          <option value="{{retest.test}}" selected="selected">---------</option>
+          <option value="CT1">CT1</option>
+          <option value="CT2">CT2</option>
+          <option value="CT3">CT3</option>
+          </select></td></tr>-->
+<!--            <tr>
+            <th><input type="submit" value="Register" id="js-upload-submit" ></th>
+          </tr>
+
+          <tr>
+            <th><button type="submit" name="button" class='btn btn-success btn-lg'>Submit</button></th>
+            </tr>-->
+          <!--</tr>button type="submit" name="button" class='btn btn-success btn-lg'>Submit</button>-->

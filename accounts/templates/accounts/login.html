@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+{% block body %}
+{% load crispy_forms_tags %}
+<div class="container" align= center style="background-color: #2C5F2CA4; width:500px; height:380px;  border-radius: 25px; border: solid black">
+  <div align=center class="login_box_well" style="width:400px;">
+        <h1>Welcome!</h1>
+        <p>You can log in here!</p>
+        <h2>Login</h2>
+        <form method="post">
+          {% csrf_token %}
+          {{ form|crispy}}
+          <button type="submit" class="btn btn-success btn-lg" style="background-color: #2C5F2AAA">Login</button>
+        </form>
+    </div>
+
+</div>
+
+  {% endblock %}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+    <title>Base</title>
+    {% endblock %}
+  </head>
+  <body>
+    <br>
+    <div class="container" >
+
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid" style="background-color:#FFFFF10" >
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'home:onlyforhod' %}"><strong>SRMID</strong></a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            {% if user.is_authenticated %}
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'home:onlyforhod' %}">Home</a></li>
+                    <!--<li> <a href="{% url 'home:retest_list' %}">Requests</a> </li>-->
+                    <li> <a href="{% url 'home:onlyforhod' %}"><strong>Final Request</strong></a> </li>
+                    <li><a href="{% url 'accounts:edit_profile' %}">Edit Profile</a></li>
+                    <li><a href="{% url 'accounts:change_passwords' %}">Change Password</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'accounts:logout' %}">Log out</a></li>
+                </ul>
+                {% else %}
+                <ul class="nav navbar-nav">
+                    <li><a href="/account/reset-password">Reset Password</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li><a href="{% url 'accounts:login' %}">Login</a></li>
+                  <li><a href="{% url 'accounts:register' %}">Register</a></li>
+                  <!--<li><a href="{% url 'accounts:student_register' %}">Student Register</a></li>
+                  <li><a href="{% url 'accounts:teacher_register' %}">Teacher Register</a></li>-->
+                </ul>
+                {% endif %}
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+    </div> <!-- /container -->
+    {% block body %}
+
+      <div class="container">
+        <div class="col-md-3"  style="background-color:#2C5F2CAA; border-radius: 15px;">
+            <h1>Profile</h1>
+            {% if user.userprofile.image %}
+            <img src="{{ user.userprofile.image.url }}" width="140">
+            {% endif %}
+
+            {% if user.image %}
+            <img src="{{ user.image.url }}" width="140">
+            {% endif %}
+            <br>
+            <br>
+            <p>Register Number: {{user}}</p>
+            <p>First Name: {{user.first_name}}</p>
+            <p> {{user.last_name}}</p>
+            <p>Email: {{user.email}}</p>
+        </div>
+        <br>
+        <div class="col-md-9" style="padding-left:50px">
+          {% if request.user.user_type == 3 %}
+          <table class='table'>
+            <thead>
+              <tr>
+                <th>Type of Request: </th>
+                <th> </th>
+                <th> </th>
+                <th>proof: </th>
+                <th> </th>
+              </tr>
+            </thead>
+            <tbody>
+               {% for i in a %}
+
+                 <tr>
+                   <td> <h2>Request</h2> </td>
+                   <td>
+                     {% for e in users_all %}
+                     {% if e.first_name == i.name %}
+                       <img src="{{ e.image.url }}" width="140">
+                     {% endif %}
+                     {% endfor %}
+                   </td>
+                   <td></td>
+                   <td><a href="{{ i.proof }}" class="btn btn-success btn-lg" target='_blank'>proof</a></td>
+                 </tr>
+                 <form method='post'>
+                     {% csrf_token %}
+
+
+                      <input id="id_proof" maxlength="100" value="{{ i.proof }}" name="proof" type="hidden" required />
+                     <tr><th><label for="id_name">Name:</label></th><td><input id="id_name" maxlength="100" style=" border-radius: 4px; border-style:initial; radius: 4px;" name="name" value="{{ i.name }}" type="text" required /></td></tr>
+                     <tr><th><label for="id_register_number">Register number:</label></th><td><input id="id_register_number" style=" border-radius: 4px; border-style:initial" maxlength="100" value="{{ i.register_number }}" name="register_number" type="text" required /></td></tr>
+
+                     {% if i.type %}
+                     <tr><th><label for="id_type">Type:</label></th><td><input id="id_type" maxlength="100" name="type" style=" border-radius: 4px; border-style:initial" value="{{ i.type }}" type="text" /></td></tr>
+                     {% endif %}
+
+                     {% if i.test and i.subject %}
+                     <tr><th><label for="id_subject">Subject:</label></th><td><input id="id_subject" maxlength="100" style=" border-radius: 4px; border-style:initial" name="subject" value="{{ i.subject }}" type="text" /></td></tr>
+                     <tr><th><label for="id_test">Test:</label></th><td><input id="id_test" maxlength="100" name="test" style=" border-radius: 4px; border-style:initial" value="{{ i.test }}" type="text" /></td></tr>
+                     {% endif %}
+
+                     {% if i.purpose %}
+                     <tr><th><label for="id_purpose">Purpose:</label></th><td><input id="id_purpose" maxlength="200" style=" border-radius: 4px; border-style:initial" value="{{ i.purpose }}" name="purpose" type="text" /></td></tr>
+                     {% endif %}
+
+
+                     <tr>
+                       <th><button id="mybutton" onclick="myFunction()" class="btn btn-danger btn-lg" type='submit'>Verify</button></th>
+                     </tr>
+                     <script type="text/javascript">
+                       function myFunction(){
+                         document.getElementById("mybutton").innerHTML
+                       }
+                     </script>
+                 </form>
+               {% endfor %}
+
+             </tbody>
+          </table>
+          {% endif %}
+        </div>
+
+    {% endblock %}
+
+  </body>
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</html>

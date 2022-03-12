@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block body %}
+  <div class="container">
+    <h2>For Internship</h2>
+    <div class="col-md-3">
+        <h1>Profile</h1>
+        {% if user.userprofile.image %}
+        <img src="{{ user.userprofile.image.url }}" width="140">
+        {% endif %}
+        <br>
+        <p>Register Number: {{user}}</p>
+        <p>First Name: {{user.first_name}}</p>
+        <p>Last Name: {{user.last_name}}</p>
+        <p>Email: {{user.email}}</p>
+    </div>
+
+    <div class="col-md-9">
+      <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="file" name="document"><br>
+          <button type="submit" name="button" class="btn btn-success">Upload File</button>
+      </form>
+      {% if url %}
+        <p>Uploaded File: <a href="{{ url }}">{{ url }}</a></p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block body %}
+  <div class="container">
+    <h2>For bonafied</h2>
+    <div class="col-md-3">
+        <h1>Profile</h1>
+        {% if user.userprofile.image %}
+        <img src="{{ user.userprofile.image.url }}" width="140">
+        {% endif %}
+        <br>
+        <p>Register Number: {{user}}</p>
+        <p>First Name: {{user.first_name}}</p>
+        <p>Last Name: {{user.last_name}}</p>
+        <p>Email: {{user.email}}</p>
+    </div>
+
+    <div class="col-md-9">
+      <table class='table'>
+          <thead>
+            <tr>
+              <th>Type of Request: </th>
+              <th>Name: </th>
+              <th>Register Number: </th>
+              <th>proof: </th>
+              <th>Action: </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for retest in retests %}
+             <!--{% if user.first_name == retest.Fa_name %}-->
+              <tr>
+                <td><h4>Restest</h4></td>
+                <td>{{ retest.name }}</td>
+                <td>{{ retest.register_number }}</td>
+                <td>
+                  <a href="{{ retest.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Medical Proof for Retest</a>
+                </td>
+                <td>
+                  <form method='post' id='myform'>
+                      {% csrf_token %}
+
+
+
+                                            <tr><th><label for="id_proof">Proof:</label></th><td><input id="id_proof" maxlength="100" value ="{{ retest.proof.url }}" name="proof" type="text" required /></td></tr>
+                      <tr><th><label for="id_name">Name:</label></th><td><input id="id_name" maxlength="100" name="name" value="{{ retest.name }}" type="text" required /></td></tr>
+                      <tr><th><label for="id_register_number">Register number:</label></th><td><input id="id_register_number" maxlength="100" value="{{ retest.register_number }}" name="register_number" type="text" required /></td></tr>
+                      <tr><th><label for="id_type">Type:</label></th><td><input id="id_type" maxlength="100" name="type" type="text" /></td></tr>
+                      <tr><th><label for="id_subject">Subject:</label></th><td><input id="id_subject" maxlength="100" value="{{ retest.subject }}" name="subject" type="text" required /></td></tr>
+                      <tr><th><label for="id_test">Test:</label></th><td><input id="id_test" maxlength="100" name="test" value="{{ retest.test }}" type="text" required /></td></tr>
+
+
+                      <tr>
+                        <th><button id="retestbutton" class="btn btn-primary btn-lg" onclick="myFunction()">Accept & Forward</button></th>
+                      </tr>
+
+                    <script>
+                      function myFunction() {
+                        document.getElementById("myForm").submit();
+                      }
+                    </script>
+
+
+                  </form>
+
+                </td>
+              </tr>
+
+             <!--{% endif %}-->
+            {% endfor %}
+            {% for internship in internships %}
+              <!--{% if user.first_name == internship.Fa_name %}-->
+              <tr>
+                <td><h4>Internship NOC</h4></td>
+                <td>{{ internship.name }}</td>
+                <td>{{ internship.register_number }}</td>
+                <td>
+                  <a href="{{ internship.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Proof for Internship NOC</a>
+                </td>
+                <td>
+
+                  <form method="post" enctype="multipart/form-data">
+                      <button type="button" class="btn btn-primary btn-lg">Accept & Forward</button>
+                  </form>
+
+                </td>
+              </tr>
+              <!--{% endif %}-->
+            {% endfor %}
+            {% for bonafied in bonafieds %}
+              <!--{% if user.first_name == bonafied.Fa_name %}-->
+              <tr>
+                <td><h4>Bonafied</h4></td>
+                <td>{{ bonafied.name }}</td>
+                <td>{{ bonafied.register_number }}</td>
+                <td>{{ bonafied.purpose }}</td>
+                <td>
+                  <a href="{{ bonafied.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Proof for Bonafied</a>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-lg">Accept & Forward</button>
+                </td>
+              </tr>
+              <!--{% endif %}-->
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,412 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+<!--    <div class="col-md-6">
+      <h2>HOME</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.post }}
+        <button type="submit">Submit</button>
+      </form>
+      <h2>{{ text }}</h2>
+      {% for post in posts %}
+        <h1>{{ post.post }}</h1>
+        <p>Sent by {{post.user.get_full_name }} on {{ post.created }}</p>
+      {% endfor %}
+    </div>
+-->
+  <div class="container" style= "border-radius: 15px;">
+    {% if request.user.user_type == 3 %}
+      <h2>for hod</h2>
+      <div class="col-md-6">
+        <h2>Others</h2>
+        {% for user in users %}
+          <a href="{% url 'accounts:view_profile_with_pk' pk=user.pk %}">
+            <h3>{{ user.get_full_name }}</h3></a>
+
+            {% if user.user_type == 1%}
+              <p>they are students.</p>
+            {% endif %}
+
+          {% if not user in students %}
+          <a href="{% url 'home:change_students' operation='add' pk=user.pk %}">
+          <button type="button" class="btn btn-success">Accept request</button>
+          </a>
+          {% endif %}
+        {% endfor %}
+
+        <h2>Students</h2>
+        {% for student in students %}
+        <div class="container">
+          <nobr>
+          <a href="{% url 'accounts:view_profile_with_pk' pk=student.pk %}">
+            <h3>{{ student.get_full_name }}</h3>
+          </a>
+          </nobr>
+          <a href="{% url 'home:change_students' operation='remove' pk=student.pk %}">
+          <button type="button" class="btn btn-danger">Reject request</button>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+    {% elif request.user.user_type == 2 %}
+    <br>
+        <div class="col-md-3" style="background-color:#2C5F2CAA; border-radius: 15px;">
+            <h1>Profile</h1>
+            {% if user.userprofile.image %}
+            <img src="{{ user.userprofile.image.url }}" width="140">
+            {% endif %}
+            <br>
+            <p>Register Number: {{user}}</p>
+            <p>First Name: {{user.first_name}}</p>
+            <p>Last Name: {{user.last_name}}</p>
+            <p>Email: {{user.email}}</p>
+        </div>
+        <br><br>
+
+        <div class="col-md-9 ">
+            <table class='table'>
+                <thead>
+                  <tr>
+                    <th>Name: </th>
+                    <th>Register Number: </th>
+                    <th>pdf: </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for retest in retests %}
+                    <tr>
+                      <td>{{ retest.name }}</td>
+                      <td>{{ retest.register_number }}</td>
+                      <td>
+                        <a href="{{ retest.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Medical Proof for Retest</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% for internship in internships %}
+                    <tr>
+                      <td>{{ internship.name }}</td>
+                      <td>{{ internship.register_number }}</td>
+                      <td>
+                        <a href="{{ internship.proof.url }}" class="btn btn-success btn-sm" target='_blank'>Proof for Internship NOC</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!--{% for user in users %}
+        {% if user.user_type == 1%}
+          <a href="{% url 'accounts:view_profile_with_pk' pk=user.pk %}">
+            <h3>{{ user.get_full_name }}</h3></a>
+
+          {% if not user in students %}
+          <a href="{% url 'home:change_students' operation='add' pk=user.pk %}">
+          <button type="button" class="btn btn-success">Accept request</button>
+          </a>
+          {% endif %}
+        {% endif %}
+        {% endfor %}
+        -->
+
+        <!--<h2>Students</h2>
+        {% for student in students %}
+        <div class="container">
+          <nobr>
+          <a href="{% url 'accounts:view_profile_with_pk' pk=student.pk %}">
+            <h3>{{ student.get_full_name }}</h3>
+          </a>
+          </nobr>
+          <a href="{% url 'home:change_students' operation='remove' pk=student.pk %}">
+          <button type="button" class="btn btn-danger">Reject request</button>
+          </a>
+        </div>
+        {% endfor %}-->
+
+
+    {% elif request.user.user_type == 1 %}
+    <!-- <button type="button" name="btn btn-success">Submit</button>-->
+    <br>
+        <style>
+          .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+          }
+
+          .dropbtn:hover, .dropbtn:focus {
+            background-color: #2980B9;
+          }
+
+          .dropdown {
+            position: relative;
+            display: inline-block;
+          }
+
+          .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+          }
+
+          .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+          }
+
+          .dropdown a:hover {background-color: #ddd;}
+
+          .show {display: block;}
+        </style>
+    <div class="container">
+      <div class="col-md-3" style="background-color:#2C5F2CAA; border-radius: 15px;" >
+          <h1>Profile</h1>
+          {% if user.userprofile.image %}
+          <img src="{{ user.userprofile.image.url }}" width="140">
+          {% endif %}
+          {% if user.image %}
+          <img src="{{ user.image.url }}" width="140">
+          {% endif %}
+          <br>
+          <br>
+          <p>Register Number: {{user}}</p>
+          <p>Name: {{user.first_name}}</p>
+          <p>Department: {{user.department}}</p>
+          <p>Email: {{user.email}}</p>
+      </div>
+      <div class="col-md-5" style="padding-left:50px">
+        <br>
+                    <h1>Welcome</h1>
+        <p>Choose the service from the dropdown menu below.</p>
+        <div class="dropdown" >
+          <button onclick="myFunction()" class="dropbtn" style="border-radius: 5px; background-color:#2C5F2CA4;">Dropdown</button>
+          <div id="myDropdown" class="dropdown-content" >
+            <a href="{% url 'home:upload_retest_form' %}">Re-Test</a>
+            <a href="{% url 'home:upload_internship_form' %}">Internship NOC</a>
+            <a href="{% url 'home:upload_bonafied_form' %}">Bonafied Certificate</a>
+          </div>
+       </div>
+     </div>
+    </div>
+
+
+
+            <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function myFunction() {
+              document.getElementById("myDropdown").classList.toggle("show");
+            }
+
+            // Close the dropdown if the user clicks outside of it
+            window.onclick = function(event) {
+              if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                  var openDropdown = dropdowns[i];
+                  if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                  }
+                }
+              }
+            }
+            </script>
+
+      <!--<a href="{% url 'home:send_mail_to_fa' %}">submit</a>-->
+    {% endif %}
+    <br>
+  </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% if user.user_type != 1 %}
+<div class="container">
+  <div class="col-md-3"  style="background-color:#2C5F2CAA; border-radius: 15px;">
+      <h1>Profile</h1>
+      {% if user.userprofile.image %}
+      <img src="{{ user.userprofile.image.url }}" width="140">
+      {% endif %}
+
+      {% if user.image %}
+      <img src="{{ user.image.url }}" width="140">
+      {% endif %}
+      <br>
+      <br>
+      <p>Register Number: {{user}}</p>
+      <p>Name: {{user.first_name}}</p>
+
+      <p>Email: {{user.email}}</p>
+  </div>
+  <br>
+  <div class="col-md-9"  style="padding-left:50px">
+    <table class='table'>
+        <thead>
+          <tr>
+            <th>Type of Request: </th>
+            <th> </th>
+            <th> </th>
+            <th>proof: </th>
+            <th> </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for retest in retests %}
+           <!--{% if user.first_name == retest.Fa_name %}-->
+            <tr>
+              <td><h4>Restest</h4></td>
+              <td>
+                {% for e in users_all %}
+                {% if e.first_name == retest.name %}
+                  <img src="{{ e.image.url }}" width="140">
+                {% endif %}
+                {% endfor %}
+              </td>
+              <td></td>
+              <td>
+                <a href="{{ retest.proof.url }}" class="btn btn-success btn-lg" target='_blank'>Medical Proof for Retest</a>
+              </td>
+              <td>
+                <form method='post'>
+                    {% csrf_token %}
+
+
+
+                                          <input id="id_proof" maxlength="100" value ="{{ retest.proof.url }}" name="proof" type="hidden" required />
+                    <tr><th><label for="id_name">Name:</label></th><td><input id="id_name" maxlength="100" style=" border-radius: 4px; border-style:initial" name="name" value="{{ retest.name }}" type="text" required /></td></tr>
+                    <tr><th><label for="id_register_number">Register number:</label></th><td><input id="id_register_number" style=" border-radius: 4px; border-style:initial"  maxlength="100" value="{{ retest.register_number }}" name="register_number" type="text" required /></td></tr>
+
+                    <tr><th><label for="id_subject">Subject:</label></th><td><input id="id_subject" maxlength="100" value="{{ retest.subject }}" style=" border-radius: 4px; border-style:initial"  name="subject" type="text" required /></td></tr>
+                    <tr><th><label for="id_test">Test:</label></th><td><input id="id_test" maxlength="100" name="test"  style=" border-radius: 4px; border-style:initial"  value="{{ retest.test }}" type="text" required /></td></tr>
+
+
+                    <tr>
+                      <th><button id="mylink" class="btn btn-primary btn-lg" style="background-color:#2C5F2CAA; border-color:#2C5F2CAA;"  type='submit'>Accept & Forward</button></th>
+                    </tr>
+
+
+
+
+                </form>
+
+              </td>
+            </tr>
+
+           <!--{% endif %}-->
+          {% endfor %}
+          {% for internship in internships %}
+            <!--{% if user.first_name == internship.Fa_name %}-->
+            <tr>
+              <td><h4>Internship NOC</h4></td>
+              <td>{% for e in users_all %}
+              {% if e.first_name == internship.name %}
+                <img src="{{ e.image.url }}" width="140">
+              {% endif %}
+              {% endfor %}</td>
+              <td></td>
+              <td>
+                <a href="{{ internship.proof.url }}" class="btn btn-success btn-lg" target='_blank'>Proof for Internship NOC</a>
+              </td>
+              <td>
+                <form method='post' id='myform1'>
+                    {% csrf_token %}
+
+
+
+                                          <label for="id_proof"></label></th><td><input id="id_proof" maxlength="100" value ="{{ internship.proof.url }}" name="proof" type="hidden" required />
+                    <tr><th><label for="id_name">Name:</label></th><td><input id="id_name" maxlength="100" name="name" style=" border-radius: 4px; border-style:initial"  value="{{ internship.name }}" type="text" required /></td></tr>
+                    <tr><th><label for="id_register_number">Register number:</label></th><td><input id="id_register_number" maxlength="100"  style=" border-radius: 4px; border-style:initial"  value="{{ internship.register_number }}" name="register_number" type="text" required /></td></tr>
+                    <tr><th><label for="id_type">Type:</label></th><td><input id="id_type" maxlength="100" value="{{ internship.type }}" name="type" style=" border-radius: 4px; border-style:initial"  type="text" /></td></tr>
+
+
+
+                    <tr>
+                      <th><button id="retestbutton" class="btn btn-primary btn-lg" style="background-color:#2C5F2CAA; border-color:#2C5F2CAA;" onclick="myFunction()">Accept & Forward</button></th>
+                    </tr>
+
+                  <script>
+                    function myFunction() {
+                      document.getElementById("myform1").submit();
+                    }
+                  </script>
+
+
+                </form>
+
+              </td>
+            </tr>
+            <!--{% endif %}-->
+          {% endfor %}
+          {% for bonafied in bonafieds %}
+            <!--{% if user.first_name == bonafied.Fa_name %}-->
+            <tr>
+              <td><h4>Bonafied</h4></td>
+              <td>{% for e in users_all %}
+              {% if e.first_name == bonafied.name %}
+                <img src="{{ e.image.url }}" width="140">
+              {% endif %}
+              {% endfor %}</td>
+              <td></td>
+              <td>
+                <a href="{{ bonafied.proof.url }}" class="btn btn-success btn-lg" target='_blank'>&nbspProof for Bonafied Ctf.&nbsp</a>
+              </td>
+              <td>
+                <form method='post'>
+                    {% csrf_token %}
+
+
+
+                                        <label for="id_proof"></label></th><td><input id="id_proof" maxlength="100" name="proof" value="{{ bonafied.proof}}" type="hidden" required />
+                  <tr><th><label for="id_name">Name:</label></th><td><input id="id_name" maxlength="100" name="name" style=" border-radius: 4px; border-style:initial"  value="{{ bonafied.name}}" type="text" required /></td></tr>
+                  <tr><th><label for="id_register_number">Register number:</label></th><td><input id="id_register_number" maxlength="100" style=" border-radius: 4px; border-style:initial"  value="{{ bonafied.register_number}}" name="register_number" type="text" required /></td></tr>
+
+
+                  <tr><th><label for="id_purpose">Purpose:</label></th><td><input id="id_purpose" maxlength="200" style=" border-radius: 4px; border-style:initial"  value="{{ bonafied.purpose}}" name="purpose" type="text" /></td></tr>
+                    <tr>
+                      <th><button type="submit" id="bonafiedbutton" class="btn btn-primary btn-lg" style="background-color:#2C5F2CAA; border-color:#2C5F2CAA;">Accept & Forward</button></th>
+                    </tr>
+
+
+
+
+                </form>
+
+              </td>
+            </tr>
+            <!--{% endif %}-->
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
